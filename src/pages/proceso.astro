@@ -1,0 +1,79 @@
+---
+import Base from '../layouts/Base.astro';
+import { etapas, preguntas } from '../data/proceso';
+---
+<Base titulo="Proceso" descripcion="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+  <header class="encabezado-pagina">
+    <div class="contenedor">
+      <span class="etiqueta">Proceso</span>
+      <h1>Cómo trabajo</h1>
+      <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+  </header>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <ol class="etapas">
+        {etapas.map((e, i) => (
+          <li class="etapa">
+            <span class="etapa__n">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h2>{e.titulo}</h2>
+              <p class="etapa__dur">{e.duracion}</p>
+            </div>
+            <p class="etapa__texto">{e.texto}</p>
+            <ul class="etapa__entregables">
+              {e.entregables.map((x) => <li>{x}</li>)}
+            </ul>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="seccion seccion--arena">
+    <div class="contenedor grilla-2">
+      <div>
+        <span class="etiqueta">Preguntas frecuentes</span>
+        <h2>Título de sección</h2>
+      </div>
+      <div class="faq">
+        {preguntas.map((q) => (
+          <details>
+            <summary>{q.p}</summary>
+            <p>{q.r}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--oscura">
+    <div class="contenedor cta">
+      <h2>Lorem ipsum dolor sit amet</h2>
+      <a href="/contacto/" class="boton">Contacto</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .etapas { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--hierro); }
+  .etapa { display: grid; grid-template-columns: 80px 1.1fr 1.4fr 1fr; gap: 2rem; padding: 2.4rem 0; border-bottom: 1px solid var(--borde); align-items: start; }
+  .etapa__n { font-family: var(--font-display); font-size: 2.6rem; color: var(--ladrillo); line-height: 1; }
+  .etapa h2 { font-size: 1.6rem; margin: 0 0 .3rem; }
+  .etapa__dur { font-size: .85rem; color: var(--texto-suave); margin: 0; }
+  .etapa__texto { margin: 0; }
+  .etapa__entregables { margin: 0; padding: 0; list-style: none; font-size: .9rem; }
+  .etapa__entregables li { padding: .25rem 0 .25rem 1.1rem; position: relative; }
+  .etapa__entregables li::before { content: ''; position: absolute; left: 0; top: .8em; width: 8px; height: 4px; background: var(--ladrillo); }
+  .faq details { border-bottom: 1px solid rgba(31,29,27,.2); padding: 1.1rem 0; }
+  .faq summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
+  .faq summary::after { content: '+'; color: var(--ladrillo-oscuro); font-size: 1.3rem; line-height: 1; }
+  .faq details[open] summary::after { content: '−'; }
+  .faq p { margin: .8rem 0 0; color: var(--texto-suave); }
+  .cta { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  @media (max-width: 960px) {
+    .etapa { grid-template-columns: 60px 1fr; gap: 1rem 1.5rem; }
+    .etapa__texto, .etapa__entregables { grid-column: 2; }
+  }
+</style>

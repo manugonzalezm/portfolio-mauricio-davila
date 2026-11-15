@@ -1,0 +1,103 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+const tipos = ['Opción 1', 'Opción 2', 'Opción 3', 'Otro'];
+const canales = [
+  { label: 'Email', valor: site.email, href: `mailto:${site.email}` },
+  { label: 'WhatsApp', valor: site.telefono, href: `https://wa.me/${site.whatsapp}` },
+  { label: 'Instagram', valor: 'Ver perfil', href: site.instagram },
+  { label: 'LinkedIn', valor: 'Ver perfil', href: site.linkedin },
+];
+---
+<Base titulo="Contacto" descripcion="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+  <header class="encabezado-pagina">
+    <div class="contenedor">
+      <span class="etiqueta">Contacto</span>
+      <h1>Contacto</h1>
+      <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    </div>
+  </header>
+
+  <section class="seccion">
+    <div class="contenedor contacto">
+      <form class="form" id="form" method="POST" action={site.formEndpoint || undefined} data-email={site.email} novalidate>
+        <div class="fila">
+          <label>Nombre<input name="nombre" type="text" autocomplete="name" required /></label>
+          <label>Email<input name="email" type="email" autocomplete="email" required /></label>
+        </div>
+        <div class="fila">
+          <label>Teléfono <span class="opc">(opcional)</span><input name="telefono" type="tel" autocomplete="tel" /></label>
+          <label>Tipo de proyecto
+            <select name="tipo">
+              {tipos.map((t) => <option>{t}</option>)}
+            </select>
+          </label>
+        </div>
+        <label>Mensaje<textarea name="mensaje" rows="6" required placeholder="Lorem ipsum dolor sit amet…"></textarea></label>
+        <p class="error" id="error" role="alert" hidden>Completá nombre, un email válido y el mensaje.</p>
+        <button type="submit" class="boton">Enviar mensaje</button>
+      </form>
+
+      <aside class="datos">
+        <ul>
+          {canales.map((c) => (
+            <li>
+              <span>{c.label}</span>
+              <a href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined} rel="noopener">{c.valor}</a>
+            </li>
+          ))}
+        </ul>
+        <div class="datos__extra">
+          <p><strong>Zona de trabajo</strong><br />{site.ubicacion}</p>
+          <p><strong>Matrícula</strong><br />{site.matricula}</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.getElementById('form') as HTMLFormElement | null;
+  const error = document.getElementById('error');
+  form?.addEventListener('submit', (ev) => {
+    const d = new FormData(form);
+    const email = String(d.get('email') || '');
+    const valido = d.get('nombre') && /\S+@\S+\.\S+/.test(email) && d.get('mensaje');
+    if (!valido) { ev.preventDefault(); if (error) error.hidden = false; return; }
+    if (error) error.hidden = true;
+    // Sin endpoint configurado: abre el cliente de mail con el mensaje armado.
+    if (!form.getAttribute('action')) {
+      ev.preventDefault();
+      const asunto = `Consulta web: ${d.get('tipo')} — ${d.get('nombre')}`;
+      const cuerpo = `${d.get('mensaje')}\n\n${d.get('nombre')}\n${email}\n${d.get('telefono') || ''}`;
+      location.href = `mailto:${form.dataset.email}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+    }
+  });
+  form?.addEventListener('input', () => { if (error) error.hidden = true; });
+</script>
+
+<style>
+  .contacto { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(2.5rem, 7vw, 7rem); }
+  .form { display: flex; flex-direction: column; gap: 1.4rem; align-items: start; }
+  .fila { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; width: 100%; }
+  label { display: flex; flex-direction: column; gap: .45rem; font-size: .9rem; font-weight: 500; width: 100%; }
+  .opc { font-weight: 400; color: var(--texto-suave); }
+  input, select, textarea {
+    font: inherit; font-size: 1rem; padding: .85rem 0; background: transparent;
+    border: 0; border-bottom: 1.5px solid rgba(31,29,27,.3); border-radius: 0; color: var(--texto);
+  }
+  input:focus, select:focus, textarea:focus { outline: none; border-bottom-color: var(--ladrillo); }
+  textarea { resize: vertical; }
+  .error { color: #9B2C1C; font-size: .9rem; margin: 0; }
+  .datos ul { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--hierro); }
+  .datos li { display: flex; justify-content: space-between; gap: 1rem; padding: 1.1rem 0; border-bottom: 1px solid var(--borde); }
+  .datos li span { color: var(--texto-suave); }
+  .datos li a { text-decoration: none; font-weight: 600; color: var(--ladrillo-oscuro); }
+  .datos li a:hover { color: var(--ladrillo); }
+  .datos__extra { margin-top: 2rem; font-size: .95rem; }
+  .datos__extra strong { font-weight: 600; }
+  @media (max-width: 860px) {
+    .contacto { grid-template-columns: 1fr; }
+    .fila { grid-template-columns: 1fr; }
+  }
+</style>

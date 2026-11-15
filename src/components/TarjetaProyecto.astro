@@ -1,0 +1,24 @@
+---
+import Imagen from './Imagen.astro';
+import type { Proyecto } from '../data/proyectos';
+interface Props { proyecto: Proyecto; tono?: 'ladrillo' | 'arena' | 'hierro'; }
+const { proyecto: p, tono = 'ladrillo' } = Astro.props;
+---
+<a href={`/proyectos/${p.slug}/`} class="tarjeta" data-categoria={p.categoria}>
+  <div class="tarjeta__img"><Imagen src={p.portada} alt={p.titulo} tono={tono} etiqueta={p.categoria} /></div>
+  <div class="tarjeta__meta">
+    <h3>{p.titulo}</h3>
+    <p>{p.ubicacion} · {p.anio}</p>
+  </div>
+</a>
+
+<style>
+  .tarjeta { display: block; text-decoration: none; }
+  .tarjeta__img { overflow: hidden; }
+  .tarjeta__img :global(> *) { transition: transform .5s ease; }
+  .tarjeta:hover .tarjeta__img :global(> *) { transform: scale(1.03); }
+  .tarjeta__meta { padding-top: 1rem; }
+  .tarjeta h3 { margin: 0 0 .2rem; transition: color .2s; }
+  .tarjeta:hover h3 { color: var(--ladrillo); }
+  .tarjeta p { margin: 0; font-size: .9rem; color: var(--texto-suave); }
+</style>

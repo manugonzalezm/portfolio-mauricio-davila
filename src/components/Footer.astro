@@ -1,0 +1,36 @@
+---
+import { nav, site } from '../data/site';
+const anio = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="contenedor">
+    <div class="footer__grilla">
+      <div>
+        <p class="footer__nombre">{site.nombre}</p>
+        <p class="footer__suave">{site.rol} · {site.matricula}<br />{site.ubicacion}</p>
+      </div>
+      <nav aria-label="Secundaria" class="footer__links">
+        {nav.map((i) => <a href={i.href}>{i.label}</a>)}
+      </nav>
+      <div class="footer__links">
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+        <a href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener">WhatsApp</a>
+        <a href={site.instagram} target="_blank" rel="noopener">Instagram</a>
+        <a href={site.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <p class="footer__legal">© {anio} {site.nombre}. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<style>
+  .footer { background: var(--hierro); color: var(--cal); padding: 4.5rem 0 2rem; }
+  .footer__grilla { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2.5rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(244,239,232,.15); }
+  .footer__nombre { font-family: var(--font-display); font-size: 1.8rem; margin-bottom: .4rem; }
+  .footer__suave { color: var(--arena); font-size: .95rem; }
+  .footer__links { display: flex; flex-direction: column; gap: .5rem; }
+  .footer__links a { text-decoration: none; color: var(--arena); font-size: .95rem; }
+  .footer__links a:hover { color: var(--cal); }
+  .footer__legal { font-size: .8rem; color: rgba(217,198,176,.6); margin: 1.5rem 0 0; }
+  @media (max-width: 760px) { .footer__grilla { grid-template-columns: 1fr; } }
+</style>

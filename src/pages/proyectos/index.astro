@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+import TarjetaProyecto from '../../components/TarjetaProyecto.astro';
+import { proyectos, categorias } from '../../data/proyectos';
+const ordenados = [...proyectos].sort((a, b) => b.anio - a.anio);
+const tonos = ['ladrillo', 'arena', 'hierro'] as const;
+---
+<Base titulo="Proyectos" descripcion="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+  <header class="encabezado-pagina">
+    <div class="contenedor">
+      <span class="etiqueta">Proyectos</span>
+      <h1>Proyectos</h1>
+      <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    </div>
+  </header>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="filtros" role="group" aria-label="Filtrar por tipo">
+        <button class="filtro" data-filtro="todos" aria-pressed="true">Todos</button>
+        {categorias.map((c) => <button class="filtro" data-filtro={c} aria-pressed="false">{c}</button>)}
+      </div>
+      <div class="grilla-3" id="grilla">
+        {ordenados.map((p, i) => <TarjetaProyecto proyecto={p} tono={tonos[i % 3]} />)}
+      </div>
+      <p id="vacio" class="vacio" hidden>Todavía no hay proyectos en esta categoría.</p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const botones = document.querySelectorAll<HTMLButtonElement>('.filtro');
+  const tarjetas = document.querySelectorAll<HTMLElement>('#grilla [data-categoria]');
+  const vacio = document.getElementById('vacio');
+  botones.forEach((b) =>
+    b.addEventListener('click', () => {
+      const f = b.dataset.filtro;
+      botones.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      let visibles = 0;
+      tarjetas.forEach((t) => {
+        const ok = f === 'todos' || t.dataset.categoria === f;
+        t.hidden = !ok;
+        if (ok) visibles++;
+      });
+      if (vacio) vacio.hidden = visibles > 0;
+    })
+  );
+</script>
+
+<style>
+  .filtros { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 3rem; }
+  .filtro { font: inherit; font-size: .9rem; padding: .55rem 1.1rem; background: transparent; border: 1px solid var(--borde); border-radius: 999px; cursor: pointer; color: var(--texto); }
+  .filtro:hover { border-color: var(--hierro); }
+  .filtro[aria-pressed='true'] { background: var(--hierro); color: var(--cal); border-color: var(--hierro); }
+  .vacio { color: var(--texto-suave); }
+</style>

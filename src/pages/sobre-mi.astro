@@ -1,0 +1,119 @@
+---
+import Base from '../layouts/Base.astro';
+import Imagen from '../components/Imagen.astro';
+import { site } from '../data/site';
+import { formacion, experiencia, capacitaciones, herramientas, idiomas } from '../data/cv';
+---
+<Base titulo="Sobre mí" descripcion={`Recorrido, CV y capacitaciones de ${site.nombre}, arquitecto.`}>
+  <section class="seccion intro">
+    <div class="contenedor grilla-2">
+      <Imagen alt={`Retrato de ${site.nombre}`} ratio="4 / 5" etiqueta="Foto" />
+      <div>
+        <span class="etiqueta">Sobre mí</span>
+        <h1>{site.nombre}</h1>
+        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.</p>
+        <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <div class="intro__ctas">
+          <a href={site.cvPdf} class="boton" download>Descargar CV (PDF)</a>
+          <a href="/contacto/" class="boton boton--linea">Contactame</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--arena">
+    <div class="contenedor cv">
+      <div class="cv__col">
+        <span class="etiqueta">Experiencia</span>
+        <ol class="linea">
+          {experiencia.map((e) => (
+            <li>
+              <span class="linea__periodo">{e.periodo}</span>
+              <h3>{e.titulo}</h3>
+              <p class="linea__lugar">{e.lugar}</p>
+              <p>{e.texto}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <div class="cv__col">
+        <span class="etiqueta">Formación</span>
+        <ol class="linea">
+          {formacion.map((f) => (
+            <li>
+              <span class="linea__periodo">{f.periodo}</span>
+              <h3>{f.titulo}</h3>
+              <p class="linea__lugar">{f.lugar}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <span class="etiqueta">Capacitaciones y certificados</span>
+      <h2>Título de sección</h2>
+      <ul class="certs">
+        {capacitaciones.map((c) => (
+          <li class="cert">
+            <span class="cert__anio">{c.anio}</span>
+            <div>
+              <h3>{c.titulo}</h3>
+              <p>{c.institucion}</p>
+            </div>
+            {c.link
+              ? <a href={c.link} target="_blank" rel="noopener" class="link-flecha">Ver certificado</a>
+              : <span class="cert__sello" aria-hidden="true"></span>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="seccion seccion--oscura">
+    <div class="contenedor grilla-2">
+      <div>
+        <span class="etiqueta">Herramientas</span>
+        <ul class="chips">{herramientas.map((h) => <li>{h}</li>)}</ul>
+      </div>
+      <div>
+        <span class="etiqueta">Idiomas</span>
+        <dl class="idiomas">
+          {idiomas.map((i) => (<div><dt>{i.idioma}</dt><dd>{i.nivel}</dd></div>))}
+        </dl>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .intro .grilla-2 { align-items: center; }
+  .intro__ctas { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
+  .cv { display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(2rem, 6vw, 6rem); }
+  .linea { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--ladrillo); }
+  .linea li { position: relative; padding: 0 0 2.2rem 1.8rem; }
+  .linea li::before { content: ''; position: absolute; left: -7px; top: .35rem; width: 12px; height: 12px; background: var(--ladrillo); }
+  .linea__periodo { font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ladrillo-oscuro); }
+  .linea h3 { margin: .3rem 0 .1rem; }
+  .linea__lugar { font-size: .92rem; color: var(--texto-suave); margin-bottom: .4rem; }
+  .linea p:last-child { margin-bottom: 0; }
+  .certs { list-style: none; margin: 2.5rem 0 0; padding: 0; border-top: 2px solid var(--hierro); }
+  .cert { display: grid; grid-template-columns: 90px 1fr auto; gap: 1.5rem; align-items: center; padding: 1.3rem 0; border-bottom: 1px solid var(--borde); }
+  .cert__anio { font-family: var(--font-display); font-size: 1.5rem; color: var(--ladrillo); }
+  .cert h3 { font-size: 1.2rem; margin: 0 0 .15rem; }
+  .cert p { margin: 0; font-size: .92rem; color: var(--texto-suave); }
+  .cert__sello { width: 14px; height: 7px; background: var(--arena); }
+  .chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .6rem; }
+  .chips li { border: 1px solid rgba(217,198,176,.4); padding: .45rem .95rem; font-size: .92rem; }
+  .idiomas { margin: 0; }
+  .idiomas div { display: flex; justify-content: space-between; padding: .8rem 0; border-bottom: 1px solid rgba(217,198,176,.25); }
+  .idiomas dd { margin: 0; color: var(--arena); }
+  @media (max-width: 860px) {
+    .cv { grid-template-columns: 1fr; }
+    .cert { grid-template-columns: 60px 1fr; }
+    .cert > :last-child { grid-column: 2; }
+  }
+</style>

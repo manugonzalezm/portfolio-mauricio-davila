@@ -1,0 +1,64 @@
+---
+import Base from '../layouts/Base.astro';
+import Imagen from '../components/Imagen.astro';
+import { disenos, tiposDiseno } from '../data/disenos';
+const ordenados = [...disenos].sort((a, b) => b.anio - a.anio);
+const tonos = ['arena', 'ladrillo', 'hierro'] as const;
+---
+<Base titulo="Mis diseños" descripcion="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+  <header class="encabezado-pagina">
+    <div class="contenedor">
+      <span class="etiqueta">Mis diseños</span>
+      <h1>Mis diseños</h1>
+      <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    </div>
+  </header>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="filtros" role="group" aria-label="Filtrar por tipo">
+        <button class="filtro" data-filtro="todos" aria-pressed="true">Todos</button>
+        {tiposDiseno.map((t) => <button class="filtro" data-filtro={t} aria-pressed="false">{t}</button>)}
+      </div>
+
+      <div class="mosaico" id="mosaico">
+        {ordenados.map((d, i) => (
+          <article class="pieza" data-tipo={d.tipo}>
+            <Imagen src={d.imagen} alt={d.titulo} ratio={d.formato ?? '4 / 3'} tono={tonos[i % 3]} etiqueta={d.tipo} />
+            <div class="pieza__texto">
+              <h3>{d.titulo}</h3>
+              <p class="pieza__meta">{d.tipo} · {d.anio}{d.distincion && <span class="pieza__premio">{d.distincion}</span>}</p>
+              <p>{d.descripcion}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const botones = document.querySelectorAll<HTMLButtonElement>('.filtro');
+  const piezas = document.querySelectorAll<HTMLElement>('#mosaico [data-tipo]');
+  botones.forEach((b) =>
+    b.addEventListener('click', () => {
+      const f = b.dataset.filtro;
+      botones.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      piezas.forEach((p) => (p.hidden = !(f === 'todos' || p.dataset.tipo === f)));
+    })
+  );
+</script>
+
+<style>
+  .filtros { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 3rem; }
+  .filtro { font: inherit; font-size: .9rem; padding: .55rem 1.1rem; background: transparent; border: 1px solid var(--borde); border-radius: 999px; cursor: pointer; color: var(--texto); }
+  .filtro:hover { border-color: var(--hierro); }
+  .filtro[aria-pressed='true'] { background: var(--hierro); color: var(--cal); border-color: var(--hierro); }
+  .mosaico { columns: 3 300px; column-gap: 2rem; }
+  .pieza { break-inside: avoid; margin-bottom: 2.5rem; }
+  .pieza__texto { padding-top: 1rem; }
+  .pieza h3 { margin-bottom: .25rem; }
+  .pieza__meta { font-size: .85rem; color: var(--texto-suave); display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: .6rem; }
+  .pieza__premio { background: var(--ladrillo); color: var(--cal); padding: 2px 8px; font-size: .75rem; letter-spacing: .04em; }
+  .pieza p:last-child { font-size: .95rem; margin: 0; }
+</style>
