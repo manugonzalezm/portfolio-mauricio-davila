@@ -7,7 +7,7 @@ import { etapas, preguntas } from '../data/proceso';
     <div class="contenedor">
       <span class="etiqueta">Proceso</span>
       <h1>Cómo trabajo</h1>
-      <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <p class="lead">Construir no tiene por qué ser estresante. Trabajo con un proceso claro, por etapas, que cuida tu tiempo y tu presupuesto, para que disfrutes el camino tanto como el resultado.</p>
     </div>
   </header>
 
@@ -35,7 +35,7 @@ import { etapas, preguntas } from '../data/proceso';
     <div class="contenedor grilla-2">
       <div>
         <span class="etiqueta">Preguntas frecuentes</span>
-        <h2>Título de sección</h2>
+        <h2>Antes de empezar</h2>
       </div>
       <div class="faq">
         {preguntas.map((q) => (
@@ -48,12 +48,6 @@ import { etapas, preguntas } from '../data/proceso';
     </div>
   </section>
 
-  <section class="seccion seccion--oscura">
-    <div class="contenedor cta">
-      <h2>Lorem ipsum dolor sit amet</h2>
-      <a href="/contacto/" class="boton">Contacto</a>
-    </div>
-  </section>
 </Base>
 
 <style>
@@ -71,7 +65,6 @@ import { etapas, preguntas } from '../data/proceso';
   .faq summary::after { content: '+'; color: var(--ladrillo-oscuro); font-size: 1.3rem; line-height: 1; }
   .faq details[open] summary::after { content: '−'; }
   .faq p { margin: .8rem 0 0; color: var(--texto-suave); }
-  .cta { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
   @media (max-width: 960px) {
     .etapa { grid-template-columns: 60px 1fr; gap: 1rem 1.5rem; }
     .etapa__texto, .etapa__entregables { grid-column: 2; }

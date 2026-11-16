@@ -7,9 +7,9 @@ const canales = [
   { label: 'WhatsApp', valor: site.telefono, href: `https://wa.me/${site.whatsapp}` },
   { label: 'Instagram', valor: 'Ver perfil', href: site.instagram },
   { label: 'LinkedIn', valor: 'Ver perfil', href: site.linkedin },
-];
+].filter((c) => c.href); // oculta las redes que no estén cargadas
 ---
-<Base titulo="Contacto" descripcion="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+<Base sinCta titulo="Contacto" descripcion="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
   <header class="encabezado-pagina">
     <div class="contenedor">
       <span class="etiqueta">Contacto</span>
@@ -33,7 +33,7 @@ const canales = [
             </select>
           </label>
         </div>
-        <label>Mensaje<textarea name="mensaje" rows="6" required placeholder="Lorem ipsum dolor sit amet…"></textarea></label>
+        <label>Mensaje<textarea name="mensaje" rows="6" required placeholder="Contame tu idea"></textarea></label>
         <p class="error" id="error" role="alert" hidden>Completá nombre, un email válido y el mensaje.</p>
         <button type="submit" class="boton">Enviar mensaje</button>
       </form>
@@ -48,7 +48,7 @@ const canales = [
           ))}
         </ul>
         <div class="datos__extra">
-          <p><strong>Zona de trabajo</strong><br />{site.ubicacion}</p>
+          <p><strong>Zona de trabajo</strong><br />Avellaneda (Bs. As.) y alrededores</p>
           <p><strong>Matrícula</strong><br />{site.matricula}</p>
         </div>
       </aside>

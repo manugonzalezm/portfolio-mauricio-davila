@@ -15,7 +15,7 @@ const tonos = ['ladrillo', 'arena', 'hierro'] as const;
     <div class="contenedor hero__grilla">
       <div class="hero__texto">
         <span class="etiqueta">{site.rol} · {site.ubicacion}</span>
-        <h1>Lorem ipsum dolor sit amet.</h1>
+        <h1>Arq. {site.nombre}</h1>
         <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
         <div class="hero__ctas">
           <a href="/proyectos/" class="boton">Ver proyectos</a>
@@ -33,7 +33,7 @@ const tonos = ['ladrillo', 'arena', 'hierro'] as const;
       <div class="cabecera">
         <div>
           <span class="etiqueta">Proyectos destacados</span>
-          <h2>Título de sección</h2>
+          <h2>Del plano a la obra</h2>
         </div>
         <a href="/proyectos/" class="link-flecha">Ver todos los proyectos</a>
       </div>
@@ -61,7 +61,7 @@ const tonos = ['ladrillo', 'arena', 'hierro'] as const;
       <div class="cabecera">
         <div>
           <span class="etiqueta">Cómo trabajo</span>
-          <h2>Título de sección</h2>
+          <h2>Tu idea, construida. Te acompaño en cada etapa</h2>
         </div>
         <a href="/proceso/" class="link-flecha">Ver el proceso completo</a>
       </div>
@@ -73,13 +73,6 @@ const tonos = ['ladrillo', 'arena', 'hierro'] as const;
     </div>
   </section>
 
-  <section class="seccion seccion--oscura">
-    <div class="contenedor cta">
-      <h2>Lorem ipsum dolor sit amet?</h2>
-      <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <a href="/contacto/" class="boton">Escribime</a>
-    </div>
-  </section>
 </Base>
 
 <style>
@@ -92,7 +85,5 @@ const tonos = ['ladrillo', 'arena', 'hierro'] as const;
   .pasos { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); border-top: 2px solid var(--hierro); }
   .pasos li { padding: 1.4rem 1.2rem 1.4rem 0; font-family: var(--font-display); font-size: 1.25rem; line-height: 1.2; border-bottom: 1px solid var(--borde); }
   .pasos__n { display: block; font-family: var(--font-body); font-size: .8rem; color: var(--ladrillo); letter-spacing: .1em; margin-bottom: .6rem; }
-  .cta { text-align: center; display: flex; flex-direction: column; align-items: center; }
-  .cta .lead { margin-bottom: 2rem; }
   @media (max-width: 860px) { .hero__grilla { grid-template-columns: 1fr; } }
 </style>

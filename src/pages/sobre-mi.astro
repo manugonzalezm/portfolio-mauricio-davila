@@ -11,9 +11,10 @@ import { formacion, experiencia, capacitaciones, herramientas, idiomas } from '.
       <div>
         <span class="etiqueta">Sobre mí</span>
         <h1>{site.nombre}</h1>
-        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.</p>
-        <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p class="lead">Escucho antes de dibujar, porque cada espacio tiene que contar la historia de quien lo vive.</p>
+        <p>Crecí en Avellaneda, rodeado de casas de barrio y edificios de ladrillo a la vista. En 2018 empecé a interesarme por la construcción y decidí comenzar la carrera de Arquitectura en la UBA, donde aprendí que el plano es solo el principio y que cada detalle se resuelve en obra.</p>
+        <p>Hoy trabajo de forma independiente desde Avellaneda, acompañando proyectos de principio a fin.</p>
+        <p>Me gusta estar en la obra, no solo en el plano. Para mí, los detalles no son un trámite: son lo que hace que un espacio se sienta bien. Por eso cuido cada uno, desde el primer boceto hasta la última terminación.</p>
         <div class="intro__ctas">
           <a href={site.cvPdf} class="boton" download>Descargar CV (PDF)</a>
           <a href="/contacto/" class="boton boton--linea">Contactame</a>
@@ -73,7 +74,7 @@ import { formacion, experiencia, capacitaciones, herramientas, idiomas } from '.
     </div>
   </section>
 
-  <section class="seccion seccion--oscura">
+  <section class="seccion seccion--arena">
     <div class="contenedor grilla-2">
       <div>
         <span class="etiqueta">Herramientas</span>
@@ -107,10 +108,10 @@ import { formacion, experiencia, capacitaciones, herramientas, idiomas } from '.
   .cert p { margin: 0; font-size: .92rem; color: var(--texto-suave); }
   .cert__sello { width: 14px; height: 7px; background: var(--arena); }
   .chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .6rem; }
-  .chips li { border: 1px solid rgba(217,198,176,.4); padding: .45rem .95rem; font-size: .92rem; }
+  .chips li { border: 1px solid rgba(31,29,27,.25); padding: .45rem .95rem; font-size: .92rem; }
   .idiomas { margin: 0; }
-  .idiomas div { display: flex; justify-content: space-between; padding: .8rem 0; border-bottom: 1px solid rgba(217,198,176,.25); }
-  .idiomas dd { margin: 0; color: var(--arena); }
+  .idiomas div { display: flex; justify-content: space-between; padding: .8rem 0; border-bottom: 1px solid rgba(31,29,27,.2); }
+  .idiomas dd { margin: 0; color: var(--ladrillo-oscuro); }
   @media (max-width: 860px) {
     .cv { grid-template-columns: 1fr; }
     .cert { grid-template-columns: 60px 1fr; }

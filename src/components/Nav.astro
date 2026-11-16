@@ -1,7 +1,7 @@
 ---
 import { nav, site } from '../data/site';
 const actual = Astro.url.pathname;
-const activo = (href: string) => actual === href || actual.startsWith(href);
+const activo = (href: string) => (href === '/' ? actual === '/' : actual.startsWith(href));
 ---
 <header class="nav">
   <div class="contenedor nav__fila">

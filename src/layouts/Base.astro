@@ -2,13 +2,15 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import CtaFinal from '../components/CtaFinal.astro';
 import { site } from '../data/site';
 
 interface Props {
   titulo?: string;
   descripcion?: string;
+  sinCta?: boolean; // true para no mostrar el bloque de cierre
 }
-const { titulo, descripcion = site.descripcion } = Astro.props;
+const { titulo, descripcion = site.descripcion, sinCta = false } = Astro.props;
 const tituloCompleto = titulo ? `${titulo} — ${site.nombre}` : `${site.nombre} · ${site.rol}`;
 ---
 <!doctype html>
@@ -34,6 +36,7 @@ const tituloCompleto = titulo ? `${titulo} — ${site.nombre}` : `${site.nombre}
     <Nav />
     <main id="contenido">
       <slot />
+      {!sinCta && <CtaFinal />}
     </main>
     <Footer />
   </body>
