@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import CtaFinal from '../components/CtaFinal.astro';
+import LoaderLadrillos from '../components/LoaderLadrillos.astro';
 import { site } from '../data/site';
 
 interface Props {
@@ -30,8 +31,21 @@ const tituloCompleto = titulo ? `${titulo} — ${site.nombre}` : `${site.nombre}
       href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Manrope:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    <script is:inline>
+      // Animación de ladrillos: solo la primera vez por sesión y sin "reducir movimiento".
+      try {
+        if (!sessionStorage.getItem('ladrillos-visto') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          sessionStorage.setItem('ladrillos-visto', '1');
+          var h = document.documentElement;
+          h.classList.add('cargando');
+          setTimeout(function () { h.classList.add('cargado'); }, 1000);
+          setTimeout(function () { h.classList.remove('cargando', 'cargado'); }, 1400);
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
+    <LoaderLadrillos />
     <a href="#contenido" class="sr-only">Saltar al contenido</a>
     <Nav />
     <main id="contenido">

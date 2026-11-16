@@ -21,20 +21,32 @@ const canales = [
     <div class="contenedor contacto">
       <form class="form" id="form" method="POST" action={site.formEndpoint || undefined} data-email={site.email} novalidate>
         <div class="fila">
-          <label>Nombre<input name="nombre" type="text" autocomplete="name" required /></label>
-          <label>Email<input name="email" type="email" autocomplete="email" required /></label>
+          <label><span class="lbl">Nombre <span class="ck" data-ck="nombre">listo</span></span><input name="nombre" type="text" autocomplete="name" required /></label>
+          <label><span class="lbl">Email <span class="ck" data-ck="email">listo</span></span><input name="email" type="email" autocomplete="email" required /></label>
         </div>
         <div class="fila">
-          <label><span>Teléfono <span class="opc">(opcional)</span></span><input name="telefono" type="tel" autocomplete="tel" /></label>
-          <label>Tipo de proyecto
+          <label><span class="lbl"><span>Teléfono <span class="opc">(opcional)</span></span></span><input name="telefono" type="tel" autocomplete="tel" /></label>
+          <label><span class="lbl">Tipo de proyecto</span>
             <select name="tipo">
               {tipos.map((t) => <option>{t}</option>)}
             </select>
           </label>
         </div>
-        <label>Mensaje<textarea name="mensaje" rows="6" required placeholder="Contame tu idea"></textarea></label>
+        <label><span class="lbl">Mensaje <span class="ck" data-ck="mensaje">listo</span></span><textarea name="mensaje" rows="6" required placeholder="Contame tu idea"></textarea></label>
         <p class="error" id="error" role="alert" hidden>Completá nombre, un email válido y el mensaje.</p>
-        <button type="submit" class="boton">Enviar mensaje</button>
+        <div class="form__pie">
+          <button type="submit" class="boton" id="enviar">Enviar mensaje</button>
+          <div class="pared" aria-hidden="true">
+            <div class="pared__muro" id="muro">
+              {Array.from({ length: 6 }, (_, f) => (
+                <div class={`pared__fila${f % 2 ? ' pared__fila--o' : ''}`}>
+                  {Array.from({ length: 5 }, () => <span class="pared__b"></span>)}
+                </div>
+              ))}
+            </div>
+          </div>
+          <p class="pared__estado" id="estado" aria-live="polite">Empezá a escribir</p>
+        </div>
       </form>
 
       <aside class="datos">
@@ -58,10 +70,50 @@ const canales = [
 <script>
   const form = document.getElementById('form') as HTMLFormElement | null;
   const error = document.getElementById('error');
+  const estado = document.getElementById('estado');
+  const enviar = document.getElementById('enviar');
+  const ladrillos = Array.from(document.querySelectorAll<HTMLElement>('#muro .pared__b'));
+  const MIN_NOMBRE = 2;
+  const MIN_MENSAJE = 20;
+  const emailValido = (v: string) => /^\S+@\S+\.\S{2,}$/.test(v.trim());
+
+  // Pared que se construye mientras se completa el formulario.
+  function actualizar() {
+    if (!form) return;
+    const nombre = (form.elements.namedItem('nombre') as HTMLInputElement).value.trim();
+    const emailEl = form.elements.namedItem('email') as HTMLInputElement;
+    const mensaje = (form.elements.namedItem('mensaje') as HTMLTextAreaElement).value.trim();
+    const okN = nombre.length >= MIN_NOMBRE;
+    const okE = emailValido(emailEl.value);
+    const okM = mensaje.length >= MIN_MENSAJE;
+    const p =
+      Math.min(nombre.length / MIN_NOMBRE, 1) * 0.25 +
+      (okE ? 0.25 : Math.min(emailEl.value.length / 8, 1) * 0.15) +
+      Math.min(mensaje.length / MIN_MENSAJE, 1) * 0.5;
+    const lista = okN && okE && okM;
+    const k = lista ? ladrillos.length : Math.min(Math.round(p * ladrillos.length), ladrillos.length - 1);
+    ladrillos.forEach((b, i) => b.classList.toggle('on', i < k));
+
+    form.querySelector('[data-ck="nombre"]')?.classList.toggle('on', okN);
+    form.querySelector('[data-ck="email"]')?.classList.toggle('on', okE);
+    form.querySelector('[data-ck="mensaje"]')?.classList.toggle('on', okM);
+
+    let texto = Math.round(p * 100) + '% construido';
+    let clase = '';
+    if (lista) { texto = '¡Formulario construido!'; clase = 'ok'; }
+    else if (k === 0) texto = 'Empezá a escribir';
+    else if (emailEl.value.length > 3 && !okE && document.activeElement !== emailEl) { texto = 'Revisá el email: falta la @ o el dominio'; clase = 'aviso'; }
+    else if (!okM && mensaje.length > 0) texto = `Contame un poco más (${MIN_MENSAJE - mensaje.length} caracteres)`;
+    if (estado) { estado.textContent = texto; estado.className = 'pared__estado ' + clase; }
+    enviar?.classList.toggle('boton--listo', lista);
+  }
+  form?.addEventListener('input', () => { if (error) error.hidden = true; actualizar(); });
+  form?.addEventListener('focusout', actualizar);
+
   form?.addEventListener('submit', (ev) => {
     const d = new FormData(form);
     const email = String(d.get('email') || '');
-    const valido = d.get('nombre') && /\S+@\S+\.\S+/.test(email) && d.get('mensaje');
+    const valido = String(d.get('nombre') || '').trim().length >= MIN_NOMBRE && emailValido(email) && String(d.get('mensaje') || '').trim().length > 0;
     if (!valido) { ev.preventDefault(); if (error) error.hidden = false; return; }
     if (error) error.hidden = true;
     // Sin endpoint configurado: abre el cliente de mail con el mensaje armado.
@@ -72,7 +124,6 @@ const canales = [
       location.href = `mailto:${form.dataset.email}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
     }
   });
-  form?.addEventListener('input', () => { if (error) error.hidden = true; });
 </script>
 
 <style>
@@ -88,6 +139,23 @@ const canales = [
   input:focus, select:focus, textarea:focus { outline: none; border-bottom-color: var(--ladrillo); }
   textarea { resize: vertical; }
   .error { color: #9B2C1C; font-size: .9rem; margin: 0; }
+  .lbl { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .ck { font-size: .78rem; font-weight: 500; color: var(--ladrillo); opacity: 0; transition: opacity .2s; }
+  .ck.on { opacity: 1; }
+  .form__pie { display: flex; align-items: flex-end; gap: 1.5rem; width: 100%; flex-wrap: wrap; }
+  .boton:not(.boton--listo)#enviar { opacity: .55; }
+  #enviar { transition: background .2s, opacity .3s; }
+  .pared { margin-left: auto; }
+  .pared__muro { display: flex; flex-direction: column-reverse; gap: 3px; }
+  .pared__fila { display: flex; gap: 3px; }
+  .pared__fila--o { margin-left: -12px; }
+  .pared__b { width: 24px; height: 11px; background: var(--ladrillo); opacity: 0; transform: translateY(-16px); }
+  .pared__b:nth-child(odd) { background: #A9563A; }
+  .pared__b.on { animation: ladrillo-cae .22s cubic-bezier(.3, 1.4, .6, 1) forwards; }
+  .pared__estado { flex-basis: 100%; text-align: right; font-size: .85rem; color: var(--texto-suave); margin: -.6rem 0 0; min-height: 1.4em; }
+  .pared__estado.ok { color: var(--ladrillo-oscuro); font-weight: 600; }
+  .pared__estado.aviso { color: #9B2C1C; }
+  @media (prefers-reduced-motion: reduce) { .pared__b.on { animation: none; opacity: 1; transform: none; } }
   .datos ul { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--hierro); }
   .datos li { display: flex; justify-content: space-between; gap: 1rem; padding: 1.1rem 0; border-bottom: 1px solid var(--borde); }
   .datos li span { color: var(--texto-suave); }

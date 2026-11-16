@@ -1,0 +1,41 @@
+---
+// Animación de carga: una pared de ladrillos que se arma de abajo hacia arriba.
+// Se muestra solo en la primera página que visita cada persona (por sesión del navegador)
+// y nunca a quien tiene activada la opción "reducir movimiento".
+// El script que decide si mostrarla está en el <head> de Base.astro.
+const FILAS = 5;
+const COLS = 6;
+---
+<div class="loader" aria-hidden="true">
+  <div class="loader__pared">
+    {Array.from({ length: FILAS }, (_, f) => (
+      <div class={`loader__fila${f % 2 ? ' loader__fila--o' : ''}`}>
+        {Array.from({ length: COLS }, (_, c) => (
+          <span class="loader__b" style={`--i:${f * COLS + c}`}></span>
+        ))}
+      </div>
+    ))}
+  </div>
+</div>
+
+<style is:global>
+  .loader {
+    display: none; position: fixed; inset: 0; z-index: 100;
+    background: var(--cal); align-items: center; justify-content: center;
+    transition: opacity .35s ease;
+  }
+  html.cargando { overflow: hidden; }
+  html.cargando .loader { display: flex; }
+  html.cargado .loader { opacity: 0; pointer-events: none; }
+  .loader__pared { display: flex; flex-direction: column-reverse; gap: 4px; }
+  .loader__fila { display: flex; gap: 4px; }
+  .loader__fila--o { margin-left: -18px; }
+  .loader__b {
+    width: 34px; height: 15px; background: var(--ladrillo);
+    opacity: 0; transform: translateY(-22px);
+    animation: ladrillo-cae .22s cubic-bezier(.3, 1.4, .6, 1) forwards;
+    animation-delay: calc(var(--i) * 22ms);
+  }
+  .loader__b:nth-child(odd) { background: #A9563A; }
+  @keyframes ladrillo-cae { to { opacity: 1; transform: none; } }
+</style>
