@@ -1,7 +1,7 @@
 ---
-import Base from '../layouts/Base.astro';
-import Imagen from '../components/Imagen.astro';
-import { disenos, tiposDiseno } from '../data/disenos';
+import Base from '../../layouts/Base.astro';
+import Imagen from '../../components/Imagen.astro';
+import { disenos, tiposDiseno } from '../../data/disenos';
 const ordenados = [...disenos].sort((a, b) => b.anio - a.anio);
 const tonos = ['arena', 'ladrillo', 'hierro'] as const;
 ---
@@ -23,14 +23,14 @@ const tonos = ['arena', 'ladrillo', 'hierro'] as const;
 
       <div class="mosaico" id="mosaico">
         {ordenados.map((d, i) => (
-          <article class="pieza" data-tipo={d.tipo}>
-            <Imagen src={d.imagen} alt={d.titulo} ratio={d.formato ?? '4 / 3'} tono={tonos[i % 3]} etiqueta={d.tipo} />
+          <a href={`/mis-disenos/${d.slug}/`} class="pieza" data-tipo={d.tipo}>
+            <div class="pieza__img"><Imagen src={d.portada} alt={d.titulo} ratio={d.formato ?? '4 / 3'} tono={tonos[i % 3]} etiqueta={d.tipo} /></div>
             <div class="pieza__texto">
               <h3>{d.titulo}</h3>
               <p class="pieza__meta">{d.tipo} · {d.anio}{d.distincion && <span class="pieza__premio">{d.distincion}</span>}</p>
-              <p>{d.descripcion}</p>
+              <p>{d.resumen}</p>
             </div>
-          </article>
+          </a>
         ))}
       </div>
     </div>
@@ -55,7 +55,12 @@ const tonos = ['arena', 'ladrillo', 'hierro'] as const;
   .filtro:hover { border-color: var(--hierro); }
   .filtro[aria-pressed='true'] { background: var(--hierro); color: var(--cal); border-color: var(--hierro); }
   .mosaico { columns: 3 300px; column-gap: 2rem; }
-  .pieza { break-inside: avoid; margin-bottom: 2.5rem; }
+  .pieza { display: block; break-inside: avoid; margin-bottom: 2.5rem; text-decoration: none; }
+  .pieza__img { overflow: hidden; }
+  .pieza__img :global(> *) { transition: transform .5s ease; }
+  .pieza:hover .pieza__img :global(> *) { transform: scale(1.03); }
+  .pieza h3 { transition: color .2s; }
+  .pieza:hover h3 { color: var(--ladrillo); }
   .pieza__texto { padding-top: 1rem; }
   .pieza h3 { margin-bottom: .25rem; }
   .pieza__meta { font-size: .85rem; color: var(--texto-suave); display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: .6rem; }

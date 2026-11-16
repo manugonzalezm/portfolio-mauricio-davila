@@ -14,7 +14,6 @@ const canales = [
     <div class="contenedor">
       <span class="etiqueta">Contacto</span>
       <h1>Contacto</h1>
-      <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
     </div>
   </header>
 
@@ -26,7 +25,7 @@ const canales = [
           <label>Email<input name="email" type="email" autocomplete="email" required /></label>
         </div>
         <div class="fila">
-          <label>Teléfono <span class="opc">(opcional)</span><input name="telefono" type="tel" autocomplete="tel" /></label>
+          <label><span>Teléfono <span class="opc">(opcional)</span></span><input name="telefono" type="tel" autocomplete="tel" /></label>
           <label>Tipo de proyecto
             <select name="tipo">
               {tipos.map((t) => <option>{t}</option>)}

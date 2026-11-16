@@ -1,0 +1,94 @@
+---
+import Base from '../../layouts/Base.astro';
+import Imagen from '../../components/Imagen.astro';
+import { disenos, type Diseno } from '../../data/disenos';
+
+export function getStaticPaths() {
+  return disenos.map((d) => ({ params: { slug: d.slug }, props: { diseno: d } }));
+}
+
+const { diseno: d } = Astro.props as { diseno: Diseno };
+const i = disenos.findIndex((x) => x.slug === d.slug);
+const siguiente = disenos[(i + 1) % disenos.length];
+const galeria = d.imagenes ?? [];
+const ficha = [
+  ['Tipo', d.tipo],
+  ['Año', String(d.anio)],
+  ['Contexto', d.contexto],
+  ...(d.distincion ? [['Distinción', d.distincion]] : []),
+];
+---
+<Base titulo={d.titulo} descripcion={d.resumen}>
+  <header class="encabezado-pagina">
+    <div class="contenedor">
+      <a href="/mis-disenos/" class="volver">← Mis diseños</a>
+      <span class="etiqueta">{d.tipo} · {d.anio}</span>
+      <h1>{d.titulo}</h1>
+      <p class="lead">{d.resumen}</p>
+    </div>
+  </header>
+
+  <div class="contenedor portada">
+    <Imagen src={d.portada} alt={d.titulo} ratio="16 / 9" tono="arena" etiqueta="Imagen principal" sizes="100vw" prioridad />
+  </div>
+
+  <section class="seccion">
+    <div class="contenedor detalle">
+      <dl class="ficha">
+        {ficha.map(([k, v]) => (<div><dt>{k}</dt><dd>{v}</dd></div>))}
+      </dl>
+      <div class="texto">
+        <h2>La idea</h2>
+        {d.descripcion.map((parrafo) => <p>{parrafo}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="contenedor galeria">
+    {galeria.length > 0
+      ? galeria.map((src, n) => <Imagen src={src} alt={`${d.titulo}, imagen ${n + 1}`} />)
+      : (
+        <>
+          <Imagen alt="Croquis" tono="arena" etiqueta="Croquis" />
+          <Imagen alt="Render" tono="hierro" etiqueta="Render" />
+          <div class="ancho"><Imagen alt="Lámina" tono="ladrillo" ratio="21 / 9" etiqueta="Lámina / planos" /></div>
+        </>
+      )}
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <span class="etiqueta">Siguiente diseño</span>
+      <a href={`/mis-disenos/${siguiente.slug}/`} class="siguiente">
+        <div class="siguiente__img"><Imagen src={siguiente.portada} alt={siguiente.titulo} tono="arena" etiqueta={siguiente.tipo} /></div>
+        <h3>{siguiente.titulo}</h3>
+        <p>{siguiente.tipo} · {siguiente.anio}</p>
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .volver { display: block; width: fit-content; margin-bottom: 1.5rem; text-decoration: none; color: var(--texto-suave); font-size: .9rem; }
+  .volver:hover { color: var(--ladrillo); }
+  .portada { margin-top: clamp(2rem, 5vw, 4rem); }
+  .detalle { display: grid; grid-template-columns: 320px 1fr; gap: clamp(2rem, 6vw, 6rem); }
+  .ficha { margin: 0; border-top: 2px solid var(--hierro); }
+  .ficha > div { display: grid; grid-template-columns: 110px 1fr; gap: 1rem; padding: .9rem 0; border-bottom: 1px solid var(--borde); font-size: .95rem; }
+  .ficha dt { color: var(--texto-suave); }
+  .ficha dd { margin: 0; }
+  .texto { max-width: 62ch; font-size: 1.1rem; }
+  .galeria { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .galeria .ancho { grid-column: 1 / -1; }
+  .siguiente { display: block; max-width: 520px; text-decoration: none; }
+  .siguiente__img { overflow: hidden; }
+  .siguiente__img :global(> *) { transition: transform .5s ease; }
+  .siguiente:hover .siguiente__img :global(> *) { transform: scale(1.03); }
+  .siguiente h3 { margin: 1rem 0 .2rem; transition: color .2s; }
+  .siguiente:hover h3 { color: var(--ladrillo); }
+  .siguiente p { margin: 0; font-size: .9rem; color: var(--texto-suave); }
+  @media (max-width: 860px) {
+    .detalle { grid-template-columns: 1fr; }
+    .galeria { grid-template-columns: 1fr; }
+  }
+</style>

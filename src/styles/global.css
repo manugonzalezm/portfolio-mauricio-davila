@@ -85,7 +85,8 @@ p { margin: 0 0 1em; }
 .link-flecha:hover::after { margin-left: 4px; }
 
 .grilla-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: clamp(2rem, 5vw, 5rem); align-items: start; }
-.grilla-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+.grilla-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1.25rem, 2.5vw, 2rem); }
+@media (max-width: 640px) { .grilla-3 { grid-template-columns: 1fr; gap: 2.5rem; } }
 
 .encabezado-pagina { padding: clamp(4rem, 10vw, 8rem) 0 clamp(2rem, 5vw, 4rem); border-bottom: 1px solid var(--borde); }
 
